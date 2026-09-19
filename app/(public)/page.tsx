@@ -12,6 +12,14 @@ export default function Home() {
           P<Clock8 className="logo" strokeWidth={2.75} />cket Heist
         </h1>
         <div>Tiny missions. Big office mischief.</div>
+        <div className="splash-intro">
+          <p>
+            The office is quiet, the stapler is unguarded, and somebody left
+            the good biscuits out. Hand your colleagues a tiny mission, set a
+            timer, and see who actually pulls it off.
+          </p>
+          <p>Placeholder copy &mdash; replace once the splash redirect lands.</p>
+        </div>
       </div>
     </div>
   )
