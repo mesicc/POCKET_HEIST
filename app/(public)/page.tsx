@@ -11,7 +11,7 @@ export default function Home() {
         <h1>
           P<Clock8 className="logo" strokeWidth={2.75} />cket Heist
         </h1>
-        <div>Small heists. Big bragging rights.</div>
+        <div>Petty crimes. Great office legends.</div>
         <div className="splash-intro">
           <p>
             The office is quiet, the stapler is unguarded, and somebody left
