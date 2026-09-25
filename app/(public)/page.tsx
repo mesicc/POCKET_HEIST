@@ -2,25 +2,28 @@
 // when logged in --> to /heists
 // when not logged in --> to /login
 
-import { Clock8 } from "lucide-react"
+import { Clock8 } from "lucide-react";
 
 export default function Home() {
   return (
     <div className="center-content">
       <div className="page-content">
         <h1>
-          P<Clock8 className="logo" strokeWidth={2.75} />cket Heist
+          P<Clock8 className="logo" strokeWidth={2.75} />
+          cket Heist
         </h1>
-        <div>Steal the stapler. Become a legend.</div>
+        <div>Steal it. Legend status.</div>
         <div className="splash-intro">
           <p>
-            The office is quiet, the stapler is unguarded, and somebody left
-            the good biscuits out. Hand your colleagues a tiny mission, set a
-            timer, and see who actually pulls it off.
+            The office is quiet, the stapler is unguarded, and somebody left the
+            good biscuits out. Hand your colleagues a tiny mission, set a timer,
+            and see who actually pulls it off.
           </p>
-          <p>Placeholder copy &mdash; replace once the splash redirect lands.</p>
+          <p>
+            Placeholder copy &mdash; replace once the splash redirect lands.
+          </p>
         </div>
       </div>
     </div>
-  )
+  );
 }
