@@ -1,0 +1,17 @@
+@reference "../../app/globals.css";
+
+.field {
+  @apply flex flex-col gap-2;
+}
+.label {
+  @apply text-sm font-bold;
+}
+.input {
+  @apply w-full px-3 py-2 rounded-md bg-light text-heading border border-lighter outline-none transition-colors;
+}
+.input:focus {
+  @apply border-primary;
+}
+.input::placeholder {
+  @apply text-body;
+}

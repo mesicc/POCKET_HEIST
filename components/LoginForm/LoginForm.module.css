@@ -1,0 +1,14 @@
+@reference "../../app/globals.css";
+
+.form {
+  @apply flex flex-col gap-4 w-full max-w-sm mx-auto mt-6;
+}
+.prompt {
+  @apply text-center text-sm;
+}
+.prompt a {
+  @apply text-primary font-bold;
+}
+.prompt a:hover {
+  @apply text-secondary;
+}

@@ -1,0 +1,11 @@
+@reference "../../app/globals.css";
+
+.button {
+  @apply cursor-pointer;
+}
+.button:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+.button:disabled:hover {
+  @apply bg-primary;
+}
