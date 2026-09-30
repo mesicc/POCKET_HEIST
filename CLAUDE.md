@@ -145,3 +145,7 @@ This project uses a **spec-driven development process**:
 - **Minimal Tailwind in templates**: Apply at most 1 Tailwind class directly in component templates. For multiple utilities, combine them into a custom class using `@apply` in CSS Modules
 - **Minimal dependencies**: Prefer built-in solutions where possible
 - **Git branching**: Use `git switch -c` for new branches, not `git checkout`
+
+## Checking Documentation
+
+- **important:** When implementing any lib/framework-specific features, ALWAYS check the approrpiate lib/framework documentation using the Context7 MCP server bifore writing any code.
