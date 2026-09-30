@@ -15,3 +15,10 @@
 svg.logo {
   display: inline-block;
 }
+
+.createHeistBtn {
+  @apply inline-flex items-center gap-2 rounded-[10px] bg-gradient-to-r from-[#9810fa] to-[#e60076] px-4 py-2 text-base text-white no-underline transition-opacity;
+}
+.createHeistBtn:hover {
+  @apply opacity-90;
+}
