@@ -2,38 +2,150 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Project Overview
+
+**Pocket Heist** is a Next.js web application themed around "tiny missions" and office mischief. This is a starter project for the Claude Code Masterclass with a frontend skeleton but no backend, database, or authentication implemented yet.
+
 ## Commands
 
-- `npm run dev` — start the Next.js dev server
-- `npm run build` / `npm run start` — production build / serve
-- `npm run lint` / `npm run lint:fix` — ESLint (flat config: `eslint-config-next` core-web-vitals + typescript)
-- `npm run typecheck` — `tsc --noEmit`
-- `npm run test` — Vitest in watch mode
-- `npm run test:run` — Vitest single run
-- `npm run test:coverage` — Vitest with coverage
-- `npm run check` — lint + typecheck + test:run, in that order (run this before considering a change done)
-- Single test file: `npx vitest run tests/components/Navbar.test.tsx`
-- Single test by name: `npx vitest run -t "renders the main heading"`
+### Development
+```bash
+npm install          # Install dependencies
+npm run dev          # Start dev server (http://localhost:3000)
+npm run build        # Production build
+npm start            # Run production server
+```
+
+### Testing
+```bash
+npm test             # Run all tests with Vitest
+npm test -- <path>   # Run specific test file
+npm test -- --watch  # Run tests in watch mode
+```
+
+### Linting
+```bash
+npm run lint         # Run ESLint
+```
+
+### Git Workflow
+```bash
+git switch -c <branch-name>  # Create and switch to new branch (preferred over git checkout)
+```
 
 ## Architecture
 
-Next.js App Router (v16) + React 19 + TypeScript (strict) + Tailwind v4. Path alias `@/*` maps to the repo root (configured in both `tsconfig.json` and `vitest.config.mts` via `vite-tsconfig-paths`).
+### Tech Stack
+- **Next.js 16** with App Router
+- **React 19** with TypeScript 5
+- **Tailwind CSS 4** for styling with CSS Modules for components
+- **Vitest** + React Testing Library for testing
+- **lucide-react** for icons
 
-**Route groups split the app by auth state**, each with its own layout:
-- `app/(public)/` — unauthenticated routes (`/`, `/login`, `/signup`, `/preview`). Layout wraps children in `<main className="public">`, no nav.
-- `app/(dashboard)/` — authenticated routes (`/heists`, `/heists/create`, `/heists/[id]`). Layout renders `<Navbar />` above `{children}`.
+### Route Organization
 
-The root `/` page is a splash screen intended to redirect based on auth state (logged in → `/heists`, logged out → `/login`) — that redirect logic is not implemented yet. There is no data layer, auth, or API routes yet; all pages currently render static placeholder content pending backend wiring.
+The app uses Next.js **route groups** to separate authenticated and public routes without affecting URLs:
 
-The `/heists` list page has separate sections for active heists, heists you've assigned to others, and expired heists — the intended shape of a "heist" is a mission with an owner/assignee split and a lifecycle (active → expired), even though none of that is modeled yet. `/heists/[id]` and `/heists/create` are stubbed detail/create routes for the same not-yet-built data model. `app/(public)/preview/page.tsx` is a scratch route for previewing new UI components in isolation before they're wired into a real page — check it when adding a component if it's already being used for that.
+**Public routes** (`app/(public)/`):
+- `/` - Landing page
+- `/login` - Login page
+- `/signup` - Signup page
+- `/preview` - Component preview page
 
-**Component convention**: each component gets its own directory with a CSS module and a barrel export, e.g. `components/Navbar/{Navbar.tsx, Navbar.module.css, index.ts}` where `index.ts` does `export { default } from "./Navbar"`. Import via the directory (`@/components/Navbar`), not the file.
+**Dashboard routes** (`app/(dashboard)/`):
+- `/heists` - Heist list
+- `/heists/create` - Create new heist
+- `/heists/[id]` - View specific heist
 
-**Styling**: Tailwind v4 configured via CSS in `app/globals.css`, not a JS/TS config file. Theme tokens live in an `@theme` block there (`--color-primary`, `--color-secondary`, `--color-dark`, `--color-light`, `--color-lighter`, `--color-success`, `--color-error`, `--color-heading`, `--color-body`, `--font-sans`) and are consumed as Tailwind utilities (e.g. `text-body`, `bg-dark`). Shared page-layout utility classes — `.page-content`, `.center-content`, `.form-title` — are defined globally in `globals.css` and reused across pages instead of being redefined per page. Every CSS module that uses `@apply` starts with `@reference "<path to app/globals.css>";` (see `Navbar.module.css`) — without it, Tailwind v4 can't resolve the custom theme tokens/utilities inside the module and the build fails.
+The `(dashboard)` layout wraps all heist-related pages with the Navbar component.
 
-**Tests** live under `tests/`, mirroring the source tree (e.g. `components/Navbar` → `tests/components/Navbar.test.tsx`). Vitest runs with `environment: 'jsdom'` and `globals: true` (no need to import `describe`/`it`/`expect`), plus `@testing-library/jest-dom` matchers loaded via `vitest.setup.ts`. Query by role/accessible name (`getByRole`) rather than test IDs, per the existing Navbar test.
+### Import Aliases
 
-## Known quirks
+TypeScript path alias `@/*` maps to project root:
+```typescript
+import Navbar from "@/components/Navbar"  // Instead of ../../../components/Navbar
+```
 
-- `app/(public)/login/page.tsx` exports a component named `SignupPage` (copy-paste artifact from the signup page) — it's still the login route, the name is just wrong. Don't rely on the function name when navigating this file.
-- Page/section copy across the scaffold is explicitly marked "Placeholder copy" in comments — don't treat it as real product copy to preserve.
+### Styling Architecture
+
+Multi-layered styling approach combining global theme, CSS Modules, and Tailwind utilities:
+
+**1. Global Theme** (`app/globals.css`)
+- Tailwind CSS v4 using `@theme` directive
+- Custom color palette:
+  - `--color-primary`: #C27AFF (purple)
+  - `--color-secondary`: #FB64B6 (pink)
+  - `--color-dark`: #030712 (background)
+  - `--color-light`: #0A101D
+  - `--color-lighter`: #101828
+  - `--color-success`: #05DF72
+  - `--color-error`: #FF6467
+- Typography base styles (h1-h4, body)
+- Global utility classes (`.page-content`, `.center-content`, `.form-title`, `.btn`)
+
+**2. Component Styles** (CSS Modules)
+- Each component has its own `.module.css` file for scoped styles
+- Use `@reference "../../app/globals.css"` to access global theme variables
+- Combine custom classes with `@apply` directive for Tailwind utilities
+- Prevents style conflicts between components
+
+**3. Tailwind Utilities**
+- Use inline for simple one-off styling (single class maximum)
+- For multiple utility classes, combine into custom class using `@apply` in CSS Modules
+
+**Example**: `components/Button/Button.tsx` uses both global `.btn` class and module-scoped styles.
+
+### Component Structure
+
+Components follow the barrel export pattern:
+```
+components/
+└── ComponentName/
+    ├── ComponentName.tsx          # Component implementation
+    ├── ComponentName.module.css   # Scoped styles
+    └── index.ts                   # Re-exports for clean imports
+```
+
+Existing components:
+- **Avatar** - User avatar with skeleton loading state
+- **Button** - Primary action button
+- **Input** - Text input field
+- **LoginForm** - Login form with email/password
+- **Navbar** - Site navigation with logo and user avatar
+- **PasswordInput** - Password input with show/hide toggle
+- **SignupForm** - Signup form with email/password
+- **Skeleton** - Loading skeleton placeholder
+
+### Testing Setup
+
+- Tests located in `tests/` directory, mirroring `components/` structure
+- Vitest configured with jsdom environment and React Testing Library
+- Globals enabled (no need to import `describe`, `it`, `expect`)
+- Setup file: `vitest.setup.ts` imports `@testing-library/jest-dom`
+- Test files follow naming pattern: `ComponentName.test.tsx`
+
+### Feature Development Workflow
+
+This project uses a **spec-driven development process**:
+
+**1. Feature Specs** (`_specs/` directory)
+- Template: `_specs/template.md` defines the spec structure
+- Each feature starts with a spec file defining requirements, acceptance criteria, and testing guidelines
+- Specs include branch naming convention: `claude/feature/<feature-name>`
+
+**2. Implementation Plans** (`_plans/` directory)
+- Implementation plans are stored here for reference
+- Plans detail step-by-step approach for building features
+
+**Example**: See `_specs/authentication-forms.md` and `_plans/authentication-forms.md` for the authentication forms feature implementation.
+
+## Code Style Preferences
+
+- **Use semicolons** for JavaScript or TypeScript code
+- **Minimal Tailwind in templates**: Apply at most 1 Tailwind class directly in component templates. For multiple utilities, combine them into a custom class using `@apply` in CSS Modules
+- **Minimal dependencies**: Prefer built-in solutions where possible
+- **Git branching**: Use `git switch -c` for new branches, not `git checkout`
+
+## Checking Documentation
+
+- **important:** When implementing any lib/framework-specific features, ALWAYS check the approrpiate lib/framework documentation using the Context7 MCP server bifore writing any code.
