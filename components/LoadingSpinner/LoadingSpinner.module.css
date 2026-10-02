@@ -1,0 +1,11 @@
+@reference "../../app/globals.css";
+
+.wrapper {
+  @apply fixed inset-0 z-50 flex items-center justify-center bg-dark;
+}
+
+.icon {
+  @apply text-primary animate-spin;
+  width: 48px;
+  height: 48px;
+}
