@@ -90,4 +90,16 @@ describe("Navbar", () => {
 
     await waitFor(() => expect(signOut).toHaveBeenCalledWith(auth));
   });
+
+  it("renders the user's avatar when signed in", () => {
+    renderSignedIn();
+
+    expect(screen.getByRole("img", { name: "Agent A" })).toBeInTheDocument();
+  });
+
+  it("does not render an avatar when signed out", () => {
+    renderSignedOut();
+
+    expect(screen.queryByRole("img")).not.toBeInTheDocument();
+  });
 });

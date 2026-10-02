@@ -5,6 +5,7 @@ import Link from "next/link";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useUser } from "@/lib/auth";
+import Avatar from "@/components/Avatar";
 import styles from "./Navbar.module.css";
 
 export default function Navbar() {
@@ -31,6 +32,11 @@ export default function Navbar() {
           <div>Tiny missions. Big office mischief.</div>
         </header>
         <ul>
+          {user && (
+            <li>
+              <Avatar name={user.displayName ?? user.email ?? "Agent"} />
+            </li>
+          )}
           {user && (
             <li>
               <button
