@@ -3,6 +3,9 @@
 .form {
   @apply flex flex-col gap-4 w-full max-w-sm mx-auto mt-6;
 }
+.error {
+  @apply bg-error/10 text-error text-sm p-3 rounded mb-4;
+}
 .prompt {
   @apply text-center text-sm;
 }

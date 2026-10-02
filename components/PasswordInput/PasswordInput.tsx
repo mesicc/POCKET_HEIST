@@ -10,6 +10,7 @@ interface PasswordInputProps {
   label: string;
   placeholder?: string;
   required?: boolean;
+  disabled?: boolean;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -20,6 +21,7 @@ export default function PasswordInput({
   label,
   placeholder,
   required,
+  disabled,
   value,
   onChange,
 }: PasswordInputProps) {
@@ -37,6 +39,7 @@ export default function PasswordInput({
           type={visible ? "text" : "password"}
           placeholder={placeholder}
           required={required}
+          disabled={disabled}
           value={value}
           onChange={onChange}
           className={styles.input}
