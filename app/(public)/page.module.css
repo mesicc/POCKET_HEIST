@@ -1,0 +1,123 @@
+@reference "../globals.css";
+
+.splash {
+  @apply flex flex-col gap-16 py-8 px-6;
+  text-align: left;
+}
+
+/* wordmark */
+.wordmark {
+  @apply flex items-center text-xl font-bold text-heading;
+}
+
+/* hero */
+.hero {
+  @apply grid items-center gap-12;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+}
+.hero .title {
+  @apply text-6xl font-extrabold leading-none;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+.hero .title span {
+  @apply block text-primary;
+}
+.lead {
+  @apply mt-6 text-lg;
+  max-width: 34rem;
+}
+.actions {
+  @apply mt-8 flex flex-wrap items-center gap-4;
+}
+.register {
+  @apply px-6 py-3 text-lg;
+}
+.register:focus-visible,
+.login:focus-visible {
+  @apply outline-2 outline-offset-4 outline-primary;
+}
+.login {
+  @apply font-bold text-heading underline underline-offset-4;
+}
+.login:hover {
+  @apply text-primary;
+}
+
+/* mission brief card */
+.brief {
+  @apply relative rounded-2xl border border-lighter bg-light p-6;
+  box-shadow: 0 0 80px -20px color-mix(in srgb, var(--color-primary) 45%, transparent);
+}
+.briefTop {
+  @apply flex items-center justify-between gap-4;
+}
+.clock {
+  @apply relative size-16 shrink-0 rounded-full border-4 border-primary;
+}
+.clock::after {
+  @apply absolute left-1/2 bottom-1/2 w-1 rounded-full bg-secondary;
+  content: "";
+  height: 38%;
+  margin-left: -2px;
+  transform-origin: bottom center;
+  animation: sweep 12s linear infinite;
+}
+.countdown {
+  @apply text-4xl font-extrabold text-heading;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.briefTitle {
+  @apply mt-6 text-lg font-bold text-heading;
+}
+.briefText {
+  @apply mt-2;
+}
+.briefMeta {
+  @apply mt-6 flex items-center justify-between border-t border-lighter pt-4 text-sm;
+}
+.status {
+  @apply font-bold text-success;
+}
+
+/* how it works */
+.steps {
+  @apply grid gap-8;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.step {
+  @apply border-t-2 border-lighter pt-4;
+}
+.stepNumber {
+  @apply text-2xl font-extrabold text-primary;
+}
+.stepTitle {
+  @apply mt-2 text-lg font-bold;
+}
+.stepText {
+  @apply mt-1;
+}
+
+@keyframes sweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clock::after {
+    animation: none;
+    transform: rotate(120deg);
+  }
+}
+
+@media (max-width: 48rem) {
+  .hero,
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hero .title {
+    @apply text-5xl;
+  }
+}
