@@ -1,75 +1,76 @@
 # Spec for Create Heist Form
 
 branch: claude/feature/create-heist-form
+figma_component (if used): N/A
 
 ## Summary
 
-Build the "Create a New Heist" form on the `/heists/create` page. A logged-in user fills in a title, description and an assignee, and submitting the form creates a new document in the Firestore `heists` collection. The list of assignable users (codename and user id) is fetched from the existing `users` collection. After the heist is saved, the user is redirected to the `/heists` page.
+Implement a functional "Create Heist" form on the `/heists/create` page that allows users to create new heist missions. The form will collect mission details, automatically set creation timestamp and deadline, and save the heist to Firestore. Upon successful submission, users are redirected to the heists list page.
 
 ## Functional Requirements
 
-- Replace the placeholder content of `app/(dashboard)/heists/create/page.tsx` with a create heist form, keeping the existing "Create a New Heist" title
-- Form fields:
-  - Title (required, text input)
-  - Description (required, multi-line text)
-  - Assign to (required, a select/dropdown of other users)
-- Fetch users from the Firestore `users` collection (each has `id` and `codename`) to populate the assignee options, and display codenames to the user
-- Exclude the currently logged-in user from the assignee options (users cannot assign a heist to themselves)
-- On submit, create a document in the `heists` collection following the existing `CreateHeistInput` shape and conventions in `types/firestore/heist.ts`:
-  - `title` and `description` from the form
-  - `createdBy` and `createdByCodename` from the current authenticated user (uid and displayName)
-  - `assignedTo` and `assignedToCodename` from the selected user
-  - `createdAt` set with a Firestore server timestamp
-  - `deadline` set to 48 hours after creation
-  - `finalStatus` set to null
-- Use the existing `COLLECTIONS.HEISTS` constant for the collection name
-- Redirect the user to `/heists` after the document is successfully created
-- Show a loading state on the submit button and disable the form while submitting, to prevent duplicate submissions
-- Show user-friendly error messages when validation fails, when users cannot be loaded, or when saving fails
-- Reuse existing components (`Input`, `Button`, `LoadingSpinner`) where possible, and follow the project's styling approach (CSS Modules, at most one Tailwind class in templates)
-- Add a new `CreateHeistForm` component following the barrel export component structure
+- Form should include input fields matching the `CreateHeistInput` interface:
+  - **Title** (text input): Name/title of the heist mission
+  - **Description** (textarea): Detailed description of the heist
+  - **Created By** (dropdown/select): User creating the heist (populated from users collection with codenames)
+  - **Assigned To** (dropdown/select): User assigned to complete the heist (populated from users collection with codenames)
+- The form should programmatically set:
+  - `createdAt`: Firebase server timestamp
+  - `deadline`: Automatically calculated as 48 hours from creation time
+  - `finalStatus`: Initially set to `null`
+- When user selects a user from dropdowns, both the user ID and codename should be captured
+- Form submission should:
+  - Validate all required fields are filled
+  - Create a new document in the `heists` Firestore collection
+  - Use the `heistConverter` for proper data transformation
+  - Redirect to `/heists` page on success
+- Display appropriate loading state during submission
+- Display error messages if submission fails
+- Form should follow existing component patterns (Button, Input components)
+
+## Figma Design Reference (only if referenced)
+
+N/A
 
 ## Possible Edge Cases
 
-- User is not logged in or auth state is still loading when the page renders or the form is submitted
-- The `users` collection is empty or contains only the current user, leaving no valid assignees
-- Fetching users fails (network or permissions error)
-- Users list is still loading when the user tries to submit
-- Title or description is empty or whitespace only
-- Very long title or description
-- Firestore write fails (network error, security rules rejection)
-- User double-clicks submit, creating duplicate heists
-- Selected assignee no longer exists by the time of submission
-- Current user's displayName is missing from their auth profile
-- User navigates away mid-submit
+- User tries to submit form with missing required fields
+- Firestore write fails due to permissions or network issues
+- Users collection is empty or fails to load
+- User navigates away during form submission
+- Deadline calculation crosses daylight saving time boundaries
+- User is not authenticated (should be handled by route protection)
+- Selected user for "assigned to" is the same as "created by"
 
 ## Acceptance Criteria
 
-- The `/heists/create` page renders the form with title, description and assignee fields
-- The assignee dropdown is populated with codenames from the `users` collection, excluding the current user
-- Submitting with any required field empty shows a validation error and does not write to Firestore
-- Submitting a valid form creates exactly one document in the `heists` collection with all fields matching the `CreateHeistInput` shape, including a deadline 48 hours after creation and `finalStatus` of null
-- The creator's uid and codename are stored in `createdBy` and `createdByCodename`, and the assignee's uid and codename in `assignedTo` and `assignedToCodename`
-- After a successful save the user is redirected to `/heists`
-- The submit button shows a loading state and the form cannot be submitted twice while saving
-- A clear error message is shown if the users fetch or the heist save fails, and the user stays on the form with their input preserved
+- Form renders on `/heists/create` page with all required input fields
+- Dropdowns for creator and assignee are populated with user codenames from Firestore users collection
+- Form validates that all required fields are filled before submission
+- Successful submission creates a heist document in Firestore with correct field values
+- `createdAt` uses Firebase server timestamp
+- `deadline` is automatically set to 48 hours after creation
+- User is redirected to `/heists` page after successful submission
+- Loading state is displayed during submission
+- Error messages are shown if submission fails
+- Form styling follows the existing design system (globals.css classes and CSS Modules)
 
 ## Open Questions
 
-- Should users be allowed to assign a heist to themselves? Proposed: no, exclude them from the list
-- Should there be maximum lengths for title and description? Proposed: yes, reasonable limits to be decided during planning
-- Should the users list be fetched on the client or via a server component/action? To be decided during planning
-- Should Firestore security rules be updated as part of this feature to allow reads on `users` and creates on `heists`? To be decided
-- Should the `/heists` list page show the newly created heist in this feature, or is that out of scope? Proposed: out of scope
+- Should the "Created By" field be auto-populated with the currently logged-in user, or should it remain a dropdown? We don't need a dropdown for this, or an input for this. It should be from the currently logged in user.
+- Should there be a confirmation dialog before submission? No
+- Should the deadline be editable or always fixed at 48 hours? Always fixed
+- Should there be validation to prevent assigning a heist to yourself? Don't show the current logged in user in the dropdown for this field.
+- What should happen if the users collection is empty? Show a message instead of the form.
 
 ## Testing Guidelines
 
 Create a test file(s) in the ./tests folder for the new feature, and create meaningful tests for the following cases, without going too heavy:
 
-- Form renders title, description and assignee fields and a submit button
-- Assignee options are loaded from the users collection and exclude the current user
-- Validation errors are shown for empty required fields and no Firestore write happens
-- Valid submission calls Firestore with the correct heist data (creator, assignee, deadline 48 hours ahead, finalStatus null)
+- Form renders with all required input fields (title, description, creator dropdown, assignee dropdown)
+- Form validation prevents submission when required fields are empty
+- Successful form submission calls Firestore with correct data structure
+- Form shows loading state during submission
+- Form displays error message when Firestore operation fails
 - User is redirected to `/heists` after successful submission
-- Submit button shows loading state and prevents duplicate submissions
-- Error message is shown when the users fetch or the heist creation fails
+- Dropdowns are populated with user data from Firestore
