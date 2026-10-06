@@ -1,0 +1,30 @@
+@reference "../../../globals.css";
+
+.form {
+  @apply flex flex-col gap-4 w-full max-w-sm mx-auto mt-6;
+}
+.inputGroup {
+  @apply flex flex-col gap-2;
+}
+.label {
+  @apply text-sm font-bold;
+}
+.textarea {
+  @apply w-full px-3 py-2 rounded-md bg-light text-heading border border-lighter outline-none transition-colors resize-y min-h-28;
+}
+.select {
+  @apply w-full px-3 py-2 rounded-md bg-light text-heading border border-lighter outline-none transition-colors;
+}
+.textarea:focus,
+.select:focus {
+  @apply border-primary;
+}
+.textarea::placeholder {
+  @apply text-body;
+}
+.error {
+  @apply bg-error/10 text-error text-sm p-3 rounded mb-4;
+}
+.emptyState {
+  @apply text-center text-sm mt-6;
+}
