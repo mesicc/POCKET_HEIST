@@ -21,7 +21,7 @@ This is a Next.js 16 + React 19 application using:
 - Path alias `@/*` for imports from project root
 
 Key coding standards to enforce:
-- NO semicolons in JavaScript/TypeScript
+- Use semicolons in JavaScript/TypeScript
 - Tailwind classes should use `@apply` in CSS Modules (not inline) unless only 1 class is needed
 - Minimal dependencies philosophy
 - Components follow modular structure with barrel exports
