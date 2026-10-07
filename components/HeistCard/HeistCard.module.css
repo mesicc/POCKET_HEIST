@@ -1,0 +1,43 @@
+@reference "../../app/globals.css";
+
+.card {
+  @apply flex min-h-44.5 flex-col gap-3 rounded-2xl border border-lighter bg-light p-6 transition-colors;
+}
+.card:hover {
+  @apply border-primary/50 shadow-lg;
+}
+
+.cardHeader {
+  @apply flex items-start justify-between gap-2;
+}
+
+.title {
+  @apply break-words text-base font-semibold text-heading no-underline transition-colors;
+}
+.title:hover {
+  @apply text-primary underline;
+}
+
+.clockIcon {
+  @apply shrink-0 text-body;
+}
+
+.row {
+  @apply flex items-center gap-2 text-sm;
+}
+
+.usernamePrimary {
+  @apply text-primary;
+}
+
+.usernameSecondary {
+  @apply text-secondary;
+}
+
+.deadlineOverdue {
+  @apply text-error;
+}
+
+.deadlineNormal {
+  @apply text-body;
+}

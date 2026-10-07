@@ -2,6 +2,8 @@
 
 import { useHeists } from "@/lib/hooks";
 import type { UseHeistsReturn } from "@/lib/hooks";
+import HeistCard, { HeistCardSkeleton } from "@/components/HeistCard";
+import styles from "./page.module.css";
 
 function HeistTitles({
   heists,
@@ -19,6 +21,35 @@ function HeistTitles({
         <li key={heist.id}>{heist.title}</li>
       ))}
     </ul>
+  );
+}
+
+function HeistCards({
+  heists,
+  loading,
+  error,
+  emptyMessage,
+}: UseHeistsReturn & { emptyMessage: string }) {
+  if (loading) {
+    return (
+      <div className={styles.grid}>
+        {Array.from({ length: 3 }, (_, i) => (
+          <HeistCardSkeleton key={i} />
+        ))}
+      </div>
+    );
+  }
+  if (error) return <p className={styles.errorMessage}>{error}</p>;
+  if (heists.length === 0) {
+    return <p className={styles.emptyState}>{emptyMessage}</p>;
+  }
+
+  return (
+    <div className={styles.grid}>
+      {heists.map((heist) => (
+        <HeistCard key={heist.id} heist={heist} />
+      ))}
+    </div>
   );
 }
 
@@ -41,11 +72,11 @@ export default function HeistsPage() {
       </div>
       <div className="active-heists">
         <h2>Your Active Heists</h2>
-        <HeistTitles {...active} emptyMessage="No active heists" />
+        <HeistCards {...active} emptyMessage="No active heists" />
       </div>
       <div className="assigned-heists">
         <h2>Heists You&rsquo;ve Assigned</h2>
-        <HeistTitles {...assigned} emptyMessage="No assigned heists" />
+        <HeistCards {...assigned} emptyMessage="No assigned heists" />
       </div>
       <div className="expired-heists">
         <h2>All Expired Heists</h2>

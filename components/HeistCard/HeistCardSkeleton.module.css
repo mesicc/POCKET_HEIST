@@ -1,0 +1,9 @@
+@reference "../../app/globals.css";
+
+.card {
+  @apply flex min-h-44.5 flex-col gap-4 rounded-2xl border border-lighter bg-light p-6 animate-pulse;
+}
+
+.line {
+  @apply h-3 rounded-full bg-lighter;
+}
