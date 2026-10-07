@@ -1,6 +1,6 @@
 ---
-description: Reviews uncommitted code changes made on the current branch.
-allowed-tools: Bash(git diff), Bash(git diff --staged)
+description: Reviews the code changes made on the current branch, committed or not.
+allowed-tools: Bash(git diff:*), Bash(git branch:*)
 ---
 
 Your job is to coordinate two reviewer subagents in parallel:
@@ -19,7 +19,8 @@ Process:
 - First, collect the diff:
   - Use `git diff` for unstaged
   - Use `git diff --staged` for staged
-  - If both are empty, say so and stop (DO NOT PROCEED).
+  - Use `git diff main...HEAD` for commits on this branch that are not on `main` (skip when already on `main`)
+  - If all are empty, say so and stop (DO NOT PROCEED).
 
 - Then invoke both subagents in parallel.
   - Provide each agent:
