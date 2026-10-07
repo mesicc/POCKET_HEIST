@@ -16,6 +16,10 @@
   }
 }
 
+.list {
+  @apply flex flex-col gap-4;
+}
+
 .emptyState {
   @apply text-center text-body;
 }
