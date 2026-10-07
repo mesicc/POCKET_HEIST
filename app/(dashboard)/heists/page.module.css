@@ -1,0 +1,25 @@
+@reference "../../globals.css";
+
+.grid {
+  @apply grid grid-cols-3 gap-6;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    @apply grid-cols-2;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    @apply grid-cols-1;
+  }
+}
+
+.emptyState {
+  @apply text-center text-body;
+}
+
+.errorMessage {
+  @apply text-error;
+}
