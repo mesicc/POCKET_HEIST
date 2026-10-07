@@ -3,24 +3,37 @@
 import { useHeists } from "@/lib/hooks";
 import type { UseHeistsReturn } from "@/lib/hooks";
 import HeistCard, { HeistCardSkeleton } from "@/components/HeistCard";
+import ExpiredHeistCard, {
+  ExpiredHeistCardSkeleton,
+} from "@/components/ExpiredHeistCard";
 import styles from "./page.module.css";
 
-function HeistTitles({
+function ExpiredHeistCards({
   heists,
   loading,
   error,
   emptyMessage,
 }: UseHeistsReturn & { emptyMessage: string }) {
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
-  if (heists.length === 0) return <p>{emptyMessage}</p>;
+  if (loading) {
+    return (
+      <div className={styles.list}>
+        {Array.from({ length: 3 }, (_, i) => (
+          <ExpiredHeistCardSkeleton key={i} />
+        ))}
+      </div>
+    );
+  }
+  if (error) return <p className={styles.errorMessage}>{error}</p>;
+  if (heists.length === 0) {
+    return <p className={styles.emptyState}>{emptyMessage}</p>;
+  }
 
   return (
-    <ul>
+    <div className={styles.list}>
       {heists.map((heist) => (
-        <li key={heist.id}>{heist.title}</li>
+        <ExpiredHeistCard key={heist.id} heist={heist} />
       ))}
-    </ul>
+    </div>
   );
 }
 
@@ -80,7 +93,7 @@ export default function HeistsPage() {
       </div>
       <div className="expired-heists">
         <h2>All Expired Heists</h2>
-        <HeistTitles {...expired} emptyMessage="No expired heists" />
+        <ExpiredHeistCards {...expired} emptyMessage="No expired heists" />
       </div>
     </div>
   );

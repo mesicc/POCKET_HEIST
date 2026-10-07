@@ -1,0 +1,55 @@
+@reference "../../app/globals.css";
+
+.card {
+  @apply flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-lighter bg-light p-4 transition-colors;
+}
+.card:hover {
+  @apply border-primary/50 shadow-lg;
+}
+
+.main {
+  @apply flex min-w-0 items-center gap-4;
+}
+
+.details {
+  @apply flex min-w-0 flex-col gap-1;
+}
+
+.statusCircle {
+  @apply flex size-10 shrink-0 items-center justify-center rounded-full;
+}
+
+.title {
+  @apply break-words text-base font-bold text-heading no-underline transition-colors;
+}
+.title:hover {
+  @apply text-primary underline;
+}
+
+.assignee {
+  @apply flex items-center gap-2 text-sm;
+}
+
+.codename {
+  @apply text-primary;
+}
+
+.meta {
+  @apply flex items-center gap-4;
+}
+
+.timestamp {
+  @apply flex items-center gap-2 text-sm;
+}
+
+.badge {
+  @apply rounded-full px-3 py-1 text-xs font-bold;
+}
+
+.success {
+  @apply bg-success/15 text-success;
+}
+
+.failed {
+  @apply bg-error/15 text-error;
+}

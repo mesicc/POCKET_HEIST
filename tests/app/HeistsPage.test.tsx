@@ -49,7 +49,7 @@ describe("HeistsPage", () => {
     expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
   });
 
-  it("renders active and assigned heists as cards linking to their details", () => {
+  it("renders every section as cards linking to their details", () => {
     vi.mocked(useHeists).mockImplementation(
       (filter) =>
         ({
@@ -71,15 +71,14 @@ describe("HeistsPage", () => {
       "href",
       "/heists/active-0",
     );
-    // expired heists stay as plain titles, not cards
     expect(
       within(
         container.querySelector(".expired-heists") as HTMLElement,
-      ).queryByRole("link"),
-    ).not.toBeInTheDocument();
+      ).getByRole("link", { name: "Expired one" }),
+    ).toHaveAttribute("href", "/heists/expired-0");
   });
 
-  it("shows skeleton cards in the grid while active and assigned heists load", () => {
+  it("shows skeleton cards while heists load", () => {
     vi.mocked(useHeists).mockReturnValue({
       heists: [],
       loading: true,
@@ -95,6 +94,7 @@ describe("HeistsPage", () => {
 
     expect(skeletons("active-heists")).toHaveLength(3);
     expect(skeletons("assigned-heists")).toHaveLength(3);
+    expect(skeletons("expired-heists")).toHaveLength(3);
   });
 
   it("shows an empty message when a result set is empty", () => {
